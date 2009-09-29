@@ -5,16 +5,15 @@ TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
     # ('Your Name', 'your_email@domain.com'),
-	('Nick Pegg', 'np9p4@mst.edu'),
-    ('Josh Bohde', 'jabc59@mst.edu'),
-	('Sean Sill', 'sms3h2@mst.edu'),
+	('Deason', 'wddr47@mst.edu'),
+
 )
 
 MANAGERS = ADMINS
 #change this to mysql to be official, i've got it set to sqlite3 for development 
 DATABASE_ENGINE = 'sqlite3'           # 'postgresql', 'mysql', 'sqlite3' or 'ado_mssql'.
-DATABASE_NAME = 'kdm'             # Or path to database file if using sqlite3.
-DATABASE_USER = 'kdm'             # Not used with sqlite3.
+DATABASE_NAME = 'kelpdb'             # Or path to database file if using sqlite3.
+DATABASE_USER = ''             # Not used with sqlite3.
 DATABASE_PASSWORD = ''      # Not used with sqlite3. 
 DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
 DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
@@ -60,7 +59,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.doc.XViewMiddleware',
 )
 
-ROOT_URLCONF = 'kdm.urls'
+ROOT_URLCONF = 'kelp.urls'
 
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates".
@@ -80,5 +79,5 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.humanize',
     'django.contrib.databrowse',
-    'kdm',
+    'kelp',
 )

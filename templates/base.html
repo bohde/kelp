@@ -1,0 +1,40 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+
+<html>
+<head>
+  <link rel="stylesheet" href="/site_media/style.css" />
+  <title>{% block title %} KELP - {% block pageTitle %} {% endblock %} {% endblock %}</title>
+</head>
+{% block head %} {% endblock %}
+  <script type="text/javascript">
+  	{% block js %}
+  	{% endblock %}
+  </script>	
+  
+<body>
+
+<div class='header'>
+
+	
+		<img src='/site_media/logo-white.png' class='logo' 
+			alt='Kmnr Electronic Logging Platform' 
+			title='Kmnr Electronic LOogging Platform'>
+	
+	<ul class='topmenu'>
+	{% block header %}	{% endblock %}
+	<li><a href='#'>Home</a></li>
+	<li><a href='#'>Next</a></li>
+	</ul>
+	
+
+</div>
+<div class='header-buffer'></div>
+
+<div class="maincontent">
+test
+  {% block body %}
+  {% endblock %}
+</div>
+{% block footer %}{% endblock %}
+</body>
+</html>

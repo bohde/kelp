@@ -5,7 +5,7 @@ admin.autodiscover()
 
 from django.contrib import databrowse
 
-urlpatterns = patterns('kdm.views',
+urlpatterns = patterns('kelp.views',
   # Search Interface
   (r'^$', 'index'),
   )
