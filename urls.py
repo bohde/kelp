@@ -8,6 +8,7 @@ from django.contrib import databrowse
 urlpatterns = patterns('kelp.views',
   # Search Interface
   (r'^$', 'index'),
+  (r'^showschedule$', 'showdaily'),
   )
 
 urlpatterns += patterns('',

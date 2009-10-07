@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block header %}
+{% endblock %}
+
+{% block body %}
+<table>
+{% for b in blocks %}
+	<tr><td>{{b.start}}</td><td></td></tr>
+	{% for s in b.slots %}
+		<tr><td></td>
+		<td>{{s.program.name}} 
+		{% if s.isdone %} -- {{s.isdone}}{% endif %}
+		</td></tr>
+	{% endfor %}
+{% endfor %}
+</table>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}
