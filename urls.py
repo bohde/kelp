@@ -9,6 +9,7 @@ urlpatterns = patterns('kelp.views',
   # Search Interface
   (r'^$', 'index'),
   (r'^showschedule$', 'showdaily'),
+  (r'^add/(?P<slot>\d+)$', 'addentry'),
   )
 
 urlpatterns += patterns('',

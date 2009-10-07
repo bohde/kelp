@@ -6,11 +6,18 @@
 {% block body %}
 <table>
 {% for b in blocks %}
-	<tr><td>{{b.start}}</td><td></td></tr>
+	<tr><td>{{b.start}}</td><td></td><td></td></tr>
 	{% for s in b.slots %}
 		<tr><td></td>
-		<td>{{s.program.name}} 
-		{% if s.isdone %} -- {{s.isdone}}{% endif %}
+		<td>{{s.program.name}}</td>
+		{% if s.isdone %}
+			<td>{{s.isdone}}</td>
+		{%else%}
+			<td>
+			<form action='{% url kelp.views.addentry s.id %}' method='POST'>
+			Notes: <input type='text' name='notes'><input type='submit' value='add'>
+			</form>
+		{% endif %}
 		</td></tr>
 	{% endfor %}
 {% endfor %}

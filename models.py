@@ -32,16 +32,16 @@ class ProgramSlot(models.Model):
 
 	def isdone(self):
 		try:
-			e = Entry.objects.filter(date=datetime.datetime.today).filter(slot=self)
+			e = Entry.objects.filter(date=datetime.datetime.today).get(slot=self)
 			return e
 		except:
-			return Null
+			return False
 				
 class Entry(models.Model):
 	#Individual program log entry
 	slot	=	models.ForeignKey(ProgramSlot)
-	date		=	models.DateField()
-	time		=	models.TimeField()
+	date		=	models.DateField(auto_now=True)
+	time		=	models.TimeField(auto_now=True)
 	notes		=	models.CharField(max_length=64)
 	def __unicode__(self):
 		return str(self.time)
