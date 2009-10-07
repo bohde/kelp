@@ -17,6 +17,13 @@ class ProgramBlock(models.Model):
 	def slots(self):
 		slots = ProgramSlot.objects.filter(time=self)
 		return slots
+	def current(self):
+		time = datetime.datetime.now()
+		now = datetime.time(hour=time.hour,minute=time.minute)
+		if now >= self.start:
+			if now <= self.end:
+				return True
+		return False
 		
 class ProgramSlot(models.Model):
 	#blocks for programming

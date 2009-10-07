@@ -4,6 +4,10 @@ body {
 	font-family: arial;
 }
 
+.current{
+	color: red;
+}
+
 .header{
 	background-color: #76923C;
 	margin: none;
@@ -61,4 +65,12 @@ body {
 	width: 530px;
 	margin-left:auto;
 	margin-right: auto;
+}
+
+#logtable {
+	border: 1px solid black;
+	border-collapse: collapse;
+}
+#logtable td{
+	border: 1px solid black;
 }

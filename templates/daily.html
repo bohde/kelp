@@ -4,14 +4,14 @@
 {% endblock %}
 
 {% block body %}
-<table>
+<table id='logtable'>
 {% for b in blocks %}
-	<tr><td>{{b.start}}</td><td></td><td></td></tr>
+	<tr><td {% if b.current %}class='current'{% endif %}>{{b.start|time}}</td><td></td><td></td></tr>
 	{% for s in b.slots %}
 		<tr><td></td>
 		<td>{{s.program.name}}</td>
 		{% if s.isdone %}
-			<td>{{s.isdone}}</td>
+			<td>{{s.isdone.time|time}}</td>
 		{%else%}
 			<td>
 			<form action='{% url kelp.views.addentry s.id %}' method='POST'>
