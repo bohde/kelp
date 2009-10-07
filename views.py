@@ -29,6 +29,8 @@ def addentry(request,slot):
 	
 	if request.POST:
 		n = request.POST['notes']
+		if n == 'Description':
+			n = ''
 	
 	e = Entry.objects.create(slot=s,notes=n)
 	return HttpResponseRedirect(reverse("kelp.views.showdaily",))

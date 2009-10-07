@@ -72,5 +72,13 @@ body {
 	border-collapse: collapse;
 }
 #logtable td{
+	padding: 3px;
+}
+#logtable th{
 	border: 1px solid black;
+	padding: 3px;
+}
+
+.even {
+	background-color:#E1FF9F;
 }
