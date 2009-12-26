@@ -10,7 +10,7 @@ urlpatterns = patterns('kelp.views',
   (r'^$', 'index'),
   (r'^showschedule$', 'showdaily'),
   (r'^add/(?P<slot>\d+)$', 'addentry'),
-  (r'^report/(\d{4})/(\w+)$', 'gen_report'),
+  (r'^report/(\d{4})/(\w+)/(\w+)$', 'gen_report'),
   (r'^report$', 'show_reports'),
 )
 

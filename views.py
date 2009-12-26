@@ -9,7 +9,7 @@ from datetime import datetime, date, timedelta
 from django.core.urlresolvers import reverse
 from collections import defaultdict
 from itertools import product
-
+from django.http import Http404
 
 def index(request):
     returndata = {'test':'test',}
@@ -44,6 +44,8 @@ def show_reports(request):
     today = date.today()
 
     quarters = Quarter.objects.order_by('begin').all()
+    
+    report_slugs = [r.slug for r in Report.objects.all()]
 
     def compare(first, second):
         return first.month < second.month or (second.month == first.month and first.day < second.day)
@@ -55,8 +57,8 @@ def show_reports(request):
             begin = begin.replace(year=(begin.year+1))
         return 
 
-    return render_to_response("reports.html", {"reports":quarter_gen(begin, today)})
-
+    return render_to_response("reports.html", {"reports":quarter_gen(begin, today)
+                                               , "slugs":report_slugs})
 
 def date_generator(delta):
     def inner(begin, end, format):
@@ -67,25 +69,30 @@ def date_generator(delta):
         return 
     return inner
 
-def gen_report(request, year, quarter):
-    q = Quarter.objects.get(pk=quarter)
-    begin = q.begin
-    end = q.end
-    
+def gen_report(request, year, quarter, slug):
+    try:
+        q = Quarter.objects.get(pk=quarter)
+        begin = q.begin.replace(year=int(year))
+        end = q.end.replace(year=int(year))
+        names = [p.name for p in Report.objects.get(slug=slug).program.all()]
+    except:
+        raise Http404
+
     date_format = "%d %b %Y"
     
     dates = date_generator(timedelta(1))(begin, end, date_format)
 
-    names = ["60 Second Science", "Earth and Sky"]
-
     es = Entry.objects.filter(date__gte=begin).filter(date__lte=end)
     es = es.select_related().all()
     
+    
+    # Group the times and notes
     entries = defaultdict(lambda: defaultdict(lambda: defaultdict(list)))
-
     for entry in es:
         entries[entry.date.strftime(date_format)][entry.slot.program.name][entry.notes].append(entry.time)
 
+
+    # Make a generator to put the data in tuples instead of a dict
     def lookup(date, name):
         if entries.has_key(date) and entries[date].has_key(name):
             ret_notes = ((note, sorted(time.strftime('%H:%M') for time in times))
