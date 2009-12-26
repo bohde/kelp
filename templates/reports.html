@@ -11,7 +11,9 @@
 <td> {{ r.0 }} </td>
 <td> 
 {% for q in r.1 %} 
-<a href= {% url kelp.views.gen_report r.0,q, %}> {{ q }} </a>
+{% for s in slugs %}
+<a href= {% url kelp.views.gen_report r.0,q,s %}> {{ q }} - {{ s }} </a><br/>
+{% endfor %} 
 {% endfor %} 
 </td>
 </tr>

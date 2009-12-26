@@ -50,8 +50,8 @@ class ProgramSlot(models.Model):
 class Entry(models.Model):
     #Individual program log entry
     slot = models.ForeignKey(ProgramSlot)
-    date = models.DateField(auto_now=True)
-    time = models.TimeField(auto_now=True)
+    date = models.DateField(auto_now_add=True)
+    time = models.TimeField(auto_now_add=True)
     notes = models.CharField(max_length=64)
     
     def __unicode__(self):
