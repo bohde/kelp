@@ -38,28 +38,47 @@ def addentry(request,slot):
     e = Entry.objects.create(slot=s,notes=n)
     return HttpResponseRedirect(reverse("kelp.views.showdaily",))
 
-def date_generator(begin, end, format):
-    ret = begin
-    delta = timedelta(1)
-    while ret <= end:
-        yield ret.strftime(format)
-        ret += delta
-    return 
 
-def quarterly_report(request, year, quarter):
-    pass
-    
-def gen_report(request):#, year, quarter):
-    begin = (2009,10,1)
-    end = (2009,12,31)
+def show_reports(request):
+    begin = Entry.get_first_date()
+    today = date.today()
+
+    quarters = Quarter.objects.order_by('begin').all()
+
+    def compare(first, second):
+        return first.month < second.month or (second.month == first.month and first.day < second.day)
+
+    def quarter_gen(begin, end):
+        while begin < today:
+            yield (begin.year, (quarter.id for quarter in quarters 
+                                 if compare(begin, quarter.end) and compare(quarter.begin, end)))
+            begin = begin.replace(year=(begin.year+1))
+        return 
+
+    return render_to_response("reports.html", {"reports":quarter_gen(begin, today)})
+
+
+def date_generator(delta):
+    def inner(begin, end, format):
+        ret = begin
+        while ret <= end:
+            yield ret.strftime(format)
+            ret += delta
+        return 
+    return inner
+
+def gen_report(request, year, quarter):
+    q = Quarter.objects.get(pk=quarter)
+    begin = q.begin
+    end = q.end
     
     date_format = "%d %b %Y"
     
-    dates = date_generator(date(*begin), date(*end), date_format)
+    dates = date_generator(timedelta(1))(begin, end, date_format)
 
     names = ["60 Second Science", "Earth and Sky"]
 
-    es = Entry.objects.filter(date__gte=datetime(*begin)).filter(date__lte=datetime(*end))
+    es = Entry.objects.filter(date__gte=begin).filter(date__lte=end)
     es = es.select_related().all()
     
     entries = defaultdict(lambda: defaultdict(lambda: defaultdict(list)))

@@ -57,6 +57,13 @@ class Entry(models.Model):
     def __unicode__(self):
         return str(self.time)
 
+    @staticmethod
+    def get_first_date():
+        try:
+            return Entry.objects.aggregate(min_date=models.Min('date'))['min_date']
+        except IndexError as e:
+            return datetime.today()
+
 
 class Report(models.Model):
     #Used to generate reports for program director
