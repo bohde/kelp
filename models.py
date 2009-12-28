@@ -61,7 +61,7 @@ class Entry(models.Model):
     def get_first_date():
         try:
             return Entry.objects.aggregate(min_date=models.Min('date'))['min_date']
-        except IndexError as e:
+        except IndexError:
             return datetime.today()
 
 
@@ -111,7 +111,6 @@ class ShowBlock(models.Model):
     start = models.TimeField()
     end = models.TimeField()
     semester = models.ForeignKey(Semester)
-
 
 class Show(models.Model):
     name = models.CharField(max_length=75)

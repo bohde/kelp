@@ -1,15 +1,28 @@
-from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render_to_response
-from django.template import Context, loader, RequestContext
-from django import forms
-from kelp.models import *
-from django.forms import ModelForm
-from django.core.paginator import Paginator
-from datetime import datetime, date, timedelta
-from django.core.urlresolvers import reverse
 from collections import defaultdict
-from itertools import product
-from django.http import Http404
+from datetime import date, timedelta
+
+from django.core.urlresolvers import reverse
+from django.http import HttpResponse, HttpResponseRedirect, Http404
+from django.shortcuts import render_to_response
+from django.template import loader, RequestContext
+from kelp.models import *
+
+
+try:
+    from itertools import product
+except:
+    def product(*args, **kwds):
+        """
+        nasty hack to get around product not being in 2.5
+        """
+        # product('ABCD', 'xy') --> Ax Ay Bx By Cx Cy Dx Dy
+        # product(range(2), repeat=3) --> 000 001 010 011 100 101 110 111
+        pools = map(tuple, args) * kwds.get('repeat', 1)
+        result = [[]]
+        for pool in pools:
+            result = [x+[y] for x in result for y in pool]
+        for prod in result:
+            yield tuple(prod)
 
 def index(request):
     returndata = {'test':'test',}
@@ -59,7 +72,6 @@ def show_reports(request):
 
     return render_to_response("reports.html", {"reports":quarter_gen(begin, today)
                                                , "slugs":report_slugs})
-
 def date_generator(delta):
     def inner(begin, end, format):
         ret = begin
