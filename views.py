@@ -7,6 +7,7 @@ from django.shortcuts import render_to_response
 from django.template import loader, RequestContext
 from kelp.models import *
 
+from django.contrib.auth.decorators import login_required, permission_required
 
 try:
     from itertools import product
@@ -24,12 +25,15 @@ except:
         for prod in result:
             yield tuple(prod)
 
+
 def index(request):
     returndata = {'test':'test',}
     t = loader.get_template('base.html')
     c = RequestContext(request,returndata)
     return HttpResponse(t.render(c))
-	
+
+
+@login_required	
 def showdaily(request):
 
     blocks = ProgramBlock.objects.all().order_by('start')
@@ -38,7 +42,8 @@ def showdaily(request):
     t = loader.get_template('daily.html')
     c = RequestContext(request,returndata)
     return HttpResponse(t.render(c))
-	
+
+@login_required	
 def addentry(request,slot):
 
     s = ProgramSlot.objects.get(pk=slot)
@@ -51,7 +56,7 @@ def addentry(request,slot):
     e = Entry.objects.create(slot=s,notes=n)
     return HttpResponseRedirect(reverse("kelp.views.showdaily",))
 
-
+@permission_required('kelp.view_reports')
 def show_reports(request):
     begin = Entry.get_first_date()
     today = date.today()
@@ -81,6 +86,7 @@ def date_generator(delta):
         return 
     return inner
 
+@permission_required('kelp.view_reports')
 def gen_report(request, year, quarter, slug):
     try:
         q = Quarter.objects.get(pk=quarter)

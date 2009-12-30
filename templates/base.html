@@ -23,8 +23,10 @@
 	<ul class='topmenu'>
 	{% block header %}	{% endblock %}
 	<li><a href='{% url kelp.views.showdaily %}'>Program Log</a></li>
-	<li><a href='#'>Next</a></li>
-	<li><a href='{% url kelp.views.show_reports %}'>Reports</a></li>
+	{% if perms.view_reports %}
+        <li><a href='{% url kelp.views.show_reports %}'>Reports</a></li>
+    {% endif %}
+    <li><a href='{% url django.contrib.auth.views.logout %}'>Logout</a></li>
     </ul>
 	
 
