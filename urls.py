@@ -22,4 +22,5 @@ urlpatterns += patterns('',
   (r'^admin/(.*)', admin.site.root),
   (r'^databrowse/(.*)', databrowse.site.root),
   (r'^accounts/login/$', 'django.contrib.auth.views.login'),
+  (r'^accounts/logout/$', 'django.contrib.auth.views.logout'),                        
 )

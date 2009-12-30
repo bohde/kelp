@@ -66,6 +66,11 @@ class Entry(models.Model):
 
 
 class Report(models.Model):
+    class Meta:
+        permissions = (
+            ("view_reports", "View Reports"),
+        )
+
     #Used to generate reports for program director
     slug = models.SlugField(max_length=20, unique=True)
     name = models.CharField(max_length=100)
