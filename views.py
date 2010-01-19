@@ -1,5 +1,6 @@
 from collections import defaultdict
 from datetime import date, timedelta
+from django.contrib.auth import logout
 
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect, Http404
@@ -9,6 +10,13 @@ from kelp.models import *
 
 from django.contrib.auth.decorators import login_required, permission_required
 
+class HttpResponseNotAuthorized(HttpResponse):
+    status_code = 401
+
+    def __init__(self, redirect_to):
+        HttpResponse.__init__(self)
+        self['WWW-Authenticate'] = 'Basic realm="UM System Single-Sign-On Login"'
+                                        
 try:
     from itertools import product
 except:
@@ -24,6 +32,10 @@ except:
             result = [x+[y] for x in result for y in pool]
         for prod in result:
             yield tuple(prod)
+
+def kelp_logout(request):
+    logout(request)
+    return HttpResponseNotAuthorized(reverse("kelp.views.index"))
 
 
 def index(request):
