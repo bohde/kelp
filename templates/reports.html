@@ -1,32 +1,24 @@
 {% extends "base.html" %}
 
-{% block header %}
-{% endblock %}
-
 {% block body %}
 
 <table id='reporttable'>
 {% for r in reports %}
 <tr class="{% cycle 'even' 'odd'%}">
-<td> {{ r.0 }} </td>
-<td> 
-{% for q in r.1 %} 
-{% for s in slugs %}
-<a href= {% url kelp.views.gen_report r.0,q,s %}> {{ q }} - {{ s }} </a><br/>
-{% endfor %} 
-{% endfor %} 
-</td>
+  <td> {{ r.0 }} </td>
+  <td> 
+    {% for q in r.1 %} 
+    {% for s in slugs %}
+    <a href= {% url kelp.views.gen_report r.0,q,s %}> {{ q }} - {{ s }} </a><br/>
+    {% endfor %} 
+    {% endfor %} 
+  </td>
 </tr>
 {% empty %}
 <tr class='even'>
-<td> 
-No reports to display.
-</td>
+  <td> No reports to display.</td>
 </tr>
 {% endfor %}
 </table>
-
 {% endblock %}
 
-{% block footer %}
-{% endblock %}

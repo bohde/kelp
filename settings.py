@@ -79,7 +79,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.humanize',
     'django.contrib.databrowse',
-    'kelp',
+    'kelp.program_log',
 )
 
 LOGIN_REDIRECT_URL = '/'

@@ -22,9 +22,9 @@
 	
 	<ul class='topmenu'>
 	{% block header %}	{% endblock %}
-	<li><a href='{% url kelp.views.showdaily %}'>Program Log</a></li>
+	<li><a href='{% url program_log.views.showdaily %}'>Program Log</a></li>
 	{% if perms.view_reports %}
-        <li><a href='{% url kelp.views.show_reports %}'>Reports</a></li>
+        <li><a href='{% url program_log.views.show_reports %}'>Reports</a></li>
     {% endif %}
     <li><a href='{% url kelp.views.kelp_logout %}'>Logout</a></li>
     </ul>

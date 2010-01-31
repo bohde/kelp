@@ -1,1 +1,0 @@
-Kmnr Electronic Logging Platform

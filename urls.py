@@ -1,17 +1,12 @@
 from django.conf.urls.defaults import *
-
 from django.contrib import admin
-admin.autodiscover()
-
 from django.contrib import databrowse
+from models import DiskJockey, Semester, ShowBlock, Show
+from program_log.models import Program, ProgramSlot, Entry, Quarter, Report, ProgramBlock
 
-urlpatterns = patterns('kelp.views',
-  # Search Interface
-  (r'^$', 'index'),
-  (r'^showschedule$', 'showdaily'),
-  (r'^add/(?P<slot>\d+)$', 'addentry'),
-  (r'^report/(\d{4})/(\w+)/(\w+)$', 'gen_report'),
-  (r'^report$', 'show_reports'),
+urlpatterns = patterns('',
+    (r'^$', 'kelp.views.index'),
+    (r'^', include('kelp.program_log.urls')),
 )
 
 urlpatterns += patterns('',
@@ -24,3 +19,23 @@ urlpatterns += patterns('',
   (r'^accounts/login/$', 'django.contrib.auth.views.login'),
   (r'^accounts/logout/$', 'kelp.views.kelp_logout'),                        
 )
+
+admin.site.register(DiskJockey)
+admin.site.register(Semester)
+admin.site.register(ShowBlock)
+admin.site.register(Show)
+
+
+class SlotInline(admin.TabularInline):
+	model = ProgramSlot
+	extra = 5
+	
+class ProgramBlockAdmin(admin.ModelAdmin):
+	inlines = (SlotInline,)
+	
+admin.site.register(Program)
+admin.site.register(ProgramBlock,ProgramBlockAdmin)
+admin.site.register(ProgramSlot)
+admin.site.register(Entry)
+admin.site.register(Quarter)
+admin.site.register(Report)

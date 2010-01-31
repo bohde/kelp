@@ -11,17 +11,21 @@
 	<tr><th colspan='3' {% if b.current %}class='current'{% endif %}>{{b.start|time}}</th></tr>
 	{% for s in b.slots %}
 	<tr class="{% cycle 'even' 'odd'%}">
-	<td>{{s.program.name}}</td>
+    {% if s.program.url %}
+       <td><a href={{ s.program.url }}>{{ s.program.name }}</a></td>
+    {% else %}
+       <td>{{s.program.name}}</td>
+    {% endif %}
 		{% if s.isdone %}
 			<td>{{s.isdone.time|time}}</td>
 			<td>{{s.isdone.notes}}</td>
 		{%else%}
 			<td colspan='2'>
-			<form action='{% url kelp.views.addentry s.id %}' method='POST'>
+			<form action='{% url program_log.views.addentry s.id %}' method='POST'>
 			
 			<input type='text' name = 'notes' id='notesbox'
 					onfocus="this.value=''" value="Description" style="width:75px;"
-					onblur="this.value='Description'" autocomplete='off' width='150'>
+					onblur="this.value='Description'" autocomplete='on' width='150'>
 			<input type='submit' value='add'>
 			</form>
 		{% endif %}
@@ -33,5 +37,4 @@
 {% endblock %}
 
 {% block footer %}
-<input type='text' name='notes' autocomplete='off'>
 {% endblock %}
