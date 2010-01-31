@@ -46,7 +46,7 @@ def addentry(request,slot):
             n = ''
 	
     e = Entry.objects.create(slot=s,notes=n)
-    return HttpResponseRedirect(reverse("program_log.views.showdaily",))
+    return HttpResponseRedirect(reverse("log-show-daily",))
 
 @permission_required('kelp.view_reports')
 def show_reports(request):
