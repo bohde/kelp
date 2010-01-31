@@ -4,6 +4,8 @@ from django.contrib import databrowse
 from models import DiskJockey, Semester, ShowBlock, Show
 from program_log.models import Program, ProgramSlot, Entry, Quarter, Report, ProgramBlock
 
+admin.autodiscover()
+
 urlpatterns = patterns('',
     (r'^$', 'kelp.views.index'),
     (r'^', include('kelp.program_log.urls')),
