@@ -21,7 +21,7 @@
 			<td>{{s.isdone.notes}}</td>
 		{%else%}
 			<td colspan='2'>
-			<form action='{% url program_log.views.addentry s.id %}' method='POST'>
+			<form action='{% url log-add-entry s.id %}' method='POST'>
 			
 			<input type='text' name = 'notes' id='notesbox'
 					onfocus="this.value=''" value="Description" style="width:75px;"
