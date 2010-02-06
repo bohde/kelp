@@ -1,4 +1,6 @@
 # Django settings for klap3 project.
+import os
+SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -6,17 +8,17 @@ TEMPLATE_DEBUG = DEBUG
 ADMINS = (
     # ('Your Name', 'your_email@domain.com'),
 	('Deason', 'wddr47@mst.edu'),
-
+    ('Josh Bohde', 'josh.bohde@gmail.com'),
 )
 
 MANAGERS = ADMINS
 #change this to mysql to be official, i've got it set to sqlite3 for development 
-DATABASE_ENGINE = 'sqlite3'           # 'postgresql', 'mysql', 'sqlite3' or 'ado_mssql'.
-DATABASE_NAME = 'kelpdb'             # Or path to database file if using sqlite3.
-DATABASE_USER = ''             # Not used with sqlite3.
+DATABASE_ENGINE = 'sqlite3' # 'postgresql', 'mysql', 'sqlite3' or 'ado_mssql'.
+DATABASE_NAME = os.path.join(SITE_ROOT, 'kelpdb') # Or path to database file if using sqlite3.
+DATABASE_USER = ''          # Not used with sqlite3.
 DATABASE_PASSWORD = ''      # Not used with sqlite3. 
-DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
-DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
+DATABASE_HOST = ''          # Set to empty string for localhost. Not used with sqlite3.
+DATABASE_PORT = ''          # Set to empty string for default. Not used with sqlite3.
 
 # Local time zone for this installation. All choices can be found here:
 # http://www.postgresql.org/docs/current/static/datetime-keywords.html#DATETIME-TIMEZONE-SET-TABLE
@@ -31,7 +33,7 @@ SITE_ID = 1
 
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
-MEDIA_ROOT = ''
+MEDIA_ROOT = os.path.join(SITE_ROOT, 'media')
 
 # URL that handles the media served from MEDIA_ROOT.
 # Example: "http://media.lawrence.com"
@@ -64,7 +66,7 @@ ROOT_URLCONF = 'kelp.urls'
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates".
     # Always use forward slashes, even on Windows.
-    'templates',
+    os.path.join(SITE_ROOT, 'templates'),
 )
 
 #TEMPLATE_CONTEXT_PROCESSORS = (
