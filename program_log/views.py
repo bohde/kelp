@@ -27,13 +27,13 @@ except:
 
 @login_required	
 def showdaily(request):
+    blocks = ProgramBlock.objects.all()
+    return render_to_response("daily.html", {"blocks":blocks}, context_instance=RequestContext(request))
 
-    blocks = ProgramBlock.objects.all().order_by('start')
-	
-    returndata = {'blocks':blocks,}
-    t = loader.get_template('daily.html')
-    c = RequestContext(request,returndata)
-    return HttpResponse(t.render(c))
+@login_required
+def show_this_show(request):
+    blocks = ProgramBlock.next_n_hours(3)
+    return render_to_response("daily.html", {"blocks":blocks}, context_instance=RequestContext(request))
 
 @login_required	
 def addentry(request,slot):
@@ -44,9 +44,12 @@ def addentry(request,slot):
         n = request.POST['notes']
 	if n == 'Description':
             n = ''
-	
-    e = Entry.objects.create(slot=s,notes=n)
-    return HttpResponseRedirect(reverse("log-show-daily",))
+            
+    if Entry.add_entry(s, n, 1):
+        return HttpResponseRedirect(reverse("log-show-current",))
+    return render_to_response("error.html",
+                              {"message":"You attempted to add the entry out of the time range."},
+                              context_instance=RequestContext(request))
 
 @permission_required('kelp.view_reports')
 def show_reports(request):
@@ -69,7 +72,8 @@ def show_reports(request):
         return 
 
     return render_to_response("reports.html", {"reports":quarter_gen(begin, today)
-                                               , "slugs":report_slugs})
+                                               , "slugs":report_slugs}
+                              ,context_instance=RequestContext(request))
 def date_generator(delta):
     def inner(begin, end, format):
         ret = begin

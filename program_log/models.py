@@ -1,4 +1,5 @@
 from django.db import models
+from itertools import chain
 import datetime
 
 # Create your models here.
@@ -24,6 +25,20 @@ class ProgramBlock(models.Model):
         time = datetime.datetime.now()
         now = datetime.time(hour=time.hour,minute=time.minute)
         return self.start <= now <= self.end
+
+    @staticmethod
+    def next_n_hours(n):
+        now = datetime.datetime.now().time()
+        now = datetime.time(now.hour)
+        end_hour = now.hour + n
+        end = now.replace(hour=end_hour%24)
+        blocks = ProgramBlock.objects.filter(start__gte=now)
+        if end_hour > 23:
+            blocks = blocks.order_by('start')
+            blocks = chain(blocks, ProgramBlock.objects.filter(end__lte=end).order_by('start'))
+        else:
+            blocks = blocks.filter(end__lte=end).order_by('start')
+        return blocks
 	    
 class ProgramSlot(models.Model):
     #blocks for programming
@@ -60,6 +75,18 @@ class Entry(models.Model):
         except IndexError:
             return datetime.today()
 
+    @staticmethod
+    def add_entry(slot, notes, hours):
+        now = datetime.datetime.now()
+        plus, minus = datetime.timedelta(hours=hours), datetime.timedelta(hours=(-1 * hours))
+        today = datetime.date.today()
+        start = datetime.datetime.combine(today, slot.time.start) - minus
+        end = datetime.datetime.combine(today, slot.time.end) + plus
+        if start < now < end :
+            e = Entry.objects.create(slot=slot, notes=notes)
+            return True
+        return False
+        
 
 class Report(models.Model):
     class Meta:
