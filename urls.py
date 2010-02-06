@@ -1,13 +1,14 @@
 from django.conf.urls.defaults import *
 from django.contrib import admin
 from django.contrib import databrowse
+from django.views.generic.simple import direct_to_template
 from models import DiskJockey, Semester, ShowBlock, Show
 from program_log.models import Program, ProgramSlot, Entry, Quarter, Report, ProgramBlock
 
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    (r'^$', 'kelp.views.index'),
+    (r'^$', direct_to_template, {'template':'generic.html'}),
     (r'^', include('kelp.program_log.urls')),
 )
 

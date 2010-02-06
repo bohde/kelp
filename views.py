@@ -10,20 +10,14 @@ from kelp.models import *
 
 from django.contrib.auth.decorators import login_required, permission_required
 
-def index(request):
-    returndata = {'test':'test',}
-    t = loader.get_template('base.html')
-    c = RequestContext(request,returndata)
-    return HttpResponse(t.render(c))
-
-class HttpResponseNotAuthorized(HttpResponse):
+class HttpResponseNotAuthorized(HttpResponseRedirect):
     status_code = 401
 
     def __init__(self, redirect_to):
-        HttpResponse.__init__(self)
+        HttpResponseRedirect.__init__(self, redirect_to)
         self['WWW-Authenticate'] = 'Basic realm="UM System Single-Sign-On Login"'
 
 def kelp_logout(request):
     logout(request)
-    return HttpResponseNotAuthorized(reverse("kelp.views.index"))
+    return HttpResponseRedirect(reverse("kelp.views.index"))
 
