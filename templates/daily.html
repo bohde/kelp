@@ -19,20 +19,15 @@
        <td>{{s.program.name}}</td>
     {% endif %}
 		{% if s.isdone %}
-			<td>{{s.isdone.time|time}}</td>
-			<td>{{s.isdone.notes}}</td>
-            <td>{{s.isdone.user.first_name}}</td>
+			<td><p class='notes'>{{s.isdone.notes}}</p></td>
+            <td class="timestamp">{{s.isdone.user.first_name}}<br/>at {{s.isdone.time|time}}</td>
 		{%else%}
-			<td colspan='3'>
 			<form action='{% url log-add-entry s.id %}' method='POST'>
-			
-			<input type='text' name = 'notes' id='notesbox'
-					onfocus="this.value=''" value="Description" style="width:75px;"
-					onblur="this.value='Description'" autocomplete='on' width='150'>
-			<input type='submit' value='add'>
+            <td><input type='text' name = 'notes' id='notesbox'
+			     onfocus="this.value=''" value="Title"/></td>
+			<td><input class='center' type='submit' value='add'/></td>
 			</form>
 		{% endif %}
-		</td>
 	</tr>
 	{% endfor %}
 {% endfor %}

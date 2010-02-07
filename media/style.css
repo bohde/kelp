@@ -82,3 +82,13 @@ body {
 .even {
 	background-color:#E1FF9F;
 }
+
+.timestamp {
+    font-style:italic;
+    font-size:.7em;
+}
+
+.notes {
+    margin: 0;
+    margin-left: 3px;
+}

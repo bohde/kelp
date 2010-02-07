@@ -89,7 +89,6 @@ class Entry(models.Model):
             return True
         return False
         
-
 class Report(models.Model):
     class Meta:
         permissions = (
