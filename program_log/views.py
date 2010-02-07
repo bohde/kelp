@@ -29,31 +29,36 @@ except:
 @login_required	
 def showdaily(request):
     blocks = ProgramBlock.objects.all()
-    return render_to_response("daily.html", {"blocks":blocks}, context_instance=RequestContext(request))
+    return render_to_response("daily.html", {"blocks":blocks},
+                              context_instance=RequestContext(request))
 
 @login_required
 def show_this_show(request):
     blocks = ProgramBlock.next_n_hours(3)
-    return render_to_response("daily.html", {"blocks":blocks}, context_instance=RequestContext(request))
+    return render_to_response("daily.html", {"blocks":blocks},
+                              context_instance=RequestContext(request))
 
 @login_required	
 def addentry(request,slot):
-
-    s = ProgramSlot.objects.get(pk=slot)
-	
-    if request.POST:
-        n = request.POST['notes']
-	if n == 'Description':
-            n = ''
-            
-    if Entry.add_entry(request.user, s, n, 1):
-        return HttpResponseRedirect(reverse("log-show-current",))
-    return render_to_response("error.html",
-                              {"message":"You attempted to add the entry out of the time range."},
-                              context_instance=RequestContext(request))
+    HOURS_LEEWAY = 1
+    s = get_object_or_404(ProgramSlot, pk=slot)
+    if request.method == "POST":
+        n = ''
+        try:
+            n = request.POST['notes']
+            n = '' if  n == 'Title' else n
+        except KeyError:
+            pass
+        if Entry.add_entry(request.user, s, n, HOURS_LEEWAY):
+            return HttpResponseRedirect(reverse("log-show-current",))
+        return render_to_response("error.html",
+                        {"message":"You attempted to add the entry out of the time range."},
+                        context_instance=RequestContext(request))
+    return HttpResponseRedirect(reverse("log-show-current",))
 
 @permission_required('kelp.view_reports')
 def show_reports(request):
+    """ Generate a list of quarters from the first entry to now. """
     begin = Entry.get_first_date()
     today = date.today()
 
@@ -77,14 +82,14 @@ def show_reports(request):
     return render_to_response("reports.html", {"reports":quarter_gen(begin, today)
                                                , "slugs":report_slugs}
                               ,context_instance=RequestContext(request))
-def date_generator(delta):
-    def inner(begin, end, format):
-        ret = begin
-        while ret <= end:
-            yield ret.strftime(format)
-            ret += delta
-        return 
-    return inner
+
+def date_range(begin, end, delta=timedelta(1), format="%d %b %Y"):
+    """ Yields all the dates for a given delta. Like an xrange but for dates. """
+    ret = begin
+    while ret <= end:
+        yield ret.strftime(format)
+        ret += delta
+    return 
 
 @permission_required('kelp.view_reports')
 def gen_report(request, year, quarter, slug):
@@ -98,17 +103,19 @@ def gen_report(request, year, quarter, slug):
 
     date_format = "%d %b %Y"
     
-    dates = date_generator(timedelta(1))(begin, end, date_format)
+    dates = date_range(begin, end, format=date_format)
 
     es = Entry.objects.filter(date__gte=begin).filter(date__lte=end)
     es = es.select_related().all()
     
-    
     # Group the times and notes
+    # entries = {'01 January 2001':{'program':{'program_desc':[(date...)]}}}
     entries = defaultdict(lambda: defaultdict(lambda: defaultdict(list)))
     for entry in es:
-        entries[entry.date.strftime(date_format)][entry.slot.program.name][entry.notes].append(entry.time)
-
+        d = entry.date.strftime(date_format)
+        name = entry.slot.program.name
+        if entry.notes:
+            entries[d][name][entry.notes].append(entry.time)
 
     # Make a generator to put the data in tuples instead of a dict
     def lookup(date, name):
