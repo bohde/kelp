@@ -75,7 +75,7 @@ class Entry(models.Model):
         try:
             return Entry.objects.aggregate(min_date=models.Min('date'))['min_date']
         except IndexError:
-            return datetime.today()
+            return None
 
     @staticmethod
     def add_entry(user, slot, notes, hours):

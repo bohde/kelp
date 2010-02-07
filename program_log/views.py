@@ -61,11 +61,13 @@ def show_reports(request):
     report_slugs = [r.slug for r in Report.objects.all()]
 
     def compare(first, second):
-        return first.month < second.month or (second.month == first.month and first.day < second.day)
+        """ Return if the first, disregarding the year is less than the second. """
+        return first.month < second.month or (second.month == first.month and first.day <= second.day)
 
     def quarter_gen(begin, end):
+        """ Return a tuple of (year, (q1,..q4)) for all quarters between the begin and end """
         if begin:
-            while begin < today:
+            while begin <= end:
                 yield (begin.year, (quarter.id for quarter in quarters 
                                      if compare(begin, quarter.end) and compare(quarter.begin, end)))
                 begin = begin.replace(year=(begin.year+1))
