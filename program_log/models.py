@@ -80,11 +80,10 @@ class Entry(models.Model):
     @staticmethod
     def add_entry(user, slot, notes, hours):
         now = datetime.datetime.now()
-        plus = datetime.timedelta(hours=hours)
+        diff = datetime.timedelta(hours=hours)
         today = datetime.date.today()
-        start = datetime.datetime.combine(today, slot.time.start) - plus
-        end = datetime.datetime.combine(today, slot.time.end) + plus
-        print start, now, end
+        start = datetime.datetime.combine(today, slot.time.start) - diff
+        end = datetime.datetime.combine(today, slot.time.end) + diff
         if start < now < end :
             e = Entry.objects.create(user=user, slot=slot, notes=notes)
             return True
