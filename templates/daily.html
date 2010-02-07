@@ -10,7 +10,7 @@
 
 <table id='logtable'>
 {% for b in blocks %}
-	<tr><th colspan='3' {% if b.current %}class='current'{% endif %}>{{b.start|time}}</th></tr>
+	<tr><th colspan='4' {% if b.current %}class='current'{% endif %}>{{b.start|time}}</th></tr>
 	{% for s in b.slots %}
 	<tr class="{% cycle 'even' 'odd'%}">
     {% if s.program.url %}
@@ -21,8 +21,9 @@
 		{% if s.isdone %}
 			<td>{{s.isdone.time|time}}</td>
 			<td>{{s.isdone.notes}}</td>
+            <td>{{s.isdone.user.first_name}}</td>
 		{%else%}
-			<td colspan='2'>
+			<td colspan='3'>
 			<form action='{% url log-add-entry s.id %}' method='POST'>
 			
 			<input type='text' name = 'notes' id='notesbox'

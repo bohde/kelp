@@ -45,7 +45,7 @@ def addentry(request,slot):
 	if n == 'Description':
             n = ''
             
-    if Entry.add_entry(s, n, 1):
+    if Entry.add_entry(request.user, s, n, 1):
         return HttpResponseRedirect(reverse("log-show-current",))
     return render_to_response("error.html",
                               {"message":"You attempted to add the entry out of the time range."},

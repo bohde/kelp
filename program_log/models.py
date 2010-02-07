@@ -1,5 +1,6 @@
 from django.db import models
 from itertools import chain
+from django.contrib.auth.models import User
 import datetime
 
 # Create your models here.
@@ -64,6 +65,7 @@ class Entry(models.Model):
     date = models.DateField(auto_now_add=True)
     time = models.TimeField(auto_now_add=True)
     notes = models.CharField(max_length=64)
+    user = models.ForeignKey(User)
     
     def __unicode__(self):
         return str(self.time)
@@ -76,14 +78,15 @@ class Entry(models.Model):
             return datetime.today()
 
     @staticmethod
-    def add_entry(slot, notes, hours):
+    def add_entry(user, slot, notes, hours):
         now = datetime.datetime.now()
-        plus, minus = datetime.timedelta(hours=hours), datetime.timedelta(hours=(-1 * hours))
+        plus = datetime.timedelta(hours=hours)
         today = datetime.date.today()
-        start = datetime.datetime.combine(today, slot.time.start) - minus
+        start = datetime.datetime.combine(today, slot.time.start) - plus
         end = datetime.datetime.combine(today, slot.time.end) + plus
+        print start, now, end
         if start < now < end :
-            e = Entry.objects.create(slot=slot, notes=notes)
+            e = Entry.objects.create(user=user, slot=slot, notes=notes)
             return True
         return False
         
