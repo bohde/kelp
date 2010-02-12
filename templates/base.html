@@ -28,8 +28,9 @@
         <li><a href='{% url log-show-report %}'>Reports</a></li>
     {% endif %}
     <li><a href='{% url kelp.views.kelp_logout %}'>Logout</a></li>
+    
+    <li class='name'>Welcome, {% if user.first_name %}{{ user.first_name }}{% else %}{{ user.username }}{% endif %}.</li>
     </ul>
-	
 
 </div>
 <div class='header-buffer'></div>

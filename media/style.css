@@ -46,6 +46,10 @@ body {
 	height: 40px;
 }
 
+.header .name{
+    float:right;
+}
+
 .logo {
 	width: 90px;
 	margin-left: 30px;
