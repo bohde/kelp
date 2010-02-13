@@ -1,28 +1,34 @@
+"""
+Urls for kelp.
+"""
 from django.conf.urls.defaults import *
-from django.contrib import admin
-from django.contrib import databrowse
+from django.contrib import admin, databrowse
 from django.views.generic.simple import direct_to_template
+
 from models import DiskJockey, Semester, ShowBlock, Show
 from program_log.models import Program, ProgramSlot, Entry, Quarter, Report, ProgramBlock
+from views import kelp_logout
+
 
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    (r'^$', direct_to_template, {'template':'generic.html'}),
+    url(r'^$', direct_to_template, {'template': 'generic.html'},
+        name="kelp-index"),
     (r'^', include('kelp.program_log.urls')),
 )
 
 urlpatterns += patterns('',
   # Media
   (r'^site_media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': 'media'}),
-	
+
   # Uncomment this for admin. This should be disabled for the production site
   (r'^admin/(.*)', admin.site.root),
   (r'^databrowse/(.*)', databrowse.site.root),
   (r'^accounts/login/$', 'django.contrib.auth.views.login'),
-  (r'^accounts/logout/$', 'kelp.views.kelp_logout'),                        
-)
+  (r'^accounts/logout/$', kelp_logout),
 
+)
 admin.site.register(DiskJockey)
 admin.site.register(Semester)
 admin.site.register(ShowBlock)
@@ -30,14 +36,17 @@ admin.site.register(Show)
 
 
 class SlotInline(admin.TabularInline):
-	model = ProgramSlot
-	extra = 5
-	
+    "Inline Slots for Program Slots in Admin."
+    model = ProgramSlot
+    extra = 5
+
+
 class ProgramBlockAdmin(admin.ModelAdmin):
-	inlines = (SlotInline,)
-	
+    "Give Program Blocks the ability to program slots inline."
+    inlines = (SlotInline,)
+
 admin.site.register(Program)
-admin.site.register(ProgramBlock,ProgramBlockAdmin)
+admin.site.register(ProgramBlock, ProgramBlockAdmin)
 admin.site.register(ProgramSlot)
 admin.site.register(Entry)
 admin.site.register(Quarter)
