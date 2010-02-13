@@ -25,7 +25,7 @@ urlpatterns += patterns('',
   # Uncomment this for admin. This should be disabled for the production site
   (r'^admin/(.*)', admin.site.root),
   (r'^databrowse/(.*)', databrowse.site.root),
-  (r'^accounts/login/$', 'django.contrib.auth.views.login'),
+  url(r'^accounts/login/$', 'django.contrib.auth.views.login', name='kelp-login'),
   (r'^accounts/logout/$', kelp_logout),
 
 )

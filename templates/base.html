@@ -27,9 +27,15 @@
 	{% if perms.view_reports %}
         <li><a href='{% url log-show-report %}'>Reports</a></li>
     {% endif %}
-    <li><a href='{% url kelp.views.kelp_logout %}'>Logout</a></li>
-    
-    <li class='name'>Welcome, {% if user.first_name %}{{ user.first_name }}{% else %}{{ user.username }}{% endif %}.</li>
+    <li class='name'>
+    {% if user.is_authenticated %}
+      <a href='{% url kelp.views.kelp_logout %}'>
+        Logout {% if user.first_name %}{{ user.first_name }}{% else %}{{ user.username }}{% endif %}
+      </a>
+    {% else %}
+      <a href='{% url kelp-login %}'>Login</a>
+    {% endif %}
+    </li>
     </ul>
 
 </div>
