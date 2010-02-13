@@ -25,19 +25,20 @@ def update_remote():
     with cd("/home/kelp/kelp"):
         sudo("su -c 'svn up' www-data")
 
-def db_restart():
+def local_db_restart():
     "Delete and rebuild database on the local"
     with settings(warn_only=True):
         local("rm kelpdb")
-    local("python2.6 manage.py syncdb")
-    local("python2.6 manage.py loaddata fixtures/*")
+    local("python2.6 manage.py syncdb --noinput")
+    local("python2.6  manage.py loaddata fixtures/*")
 
 def restart_database():
     "Delete and rebuild the database on the remote"
     with cd("/home/kelp/kelp"):
-        sudo("su -c 'rm ../kelpdb' www-data")
-        sudo("su -c './manage.py syncdb' www-data")
-        sudo("su -c './manage.py loaddata fixtures/*' www-data)")
+        with settings(warn_only=True):
+            sudo("su -c 'rm ../kelpdb' www-data")
+        sudo("su -c 'python manage.py syncdb --noinput' www-data")
+        sudo("su -c 'python manage.py loaddata fixtures/*' www-data)")
 
 
 def push_to_server():
