@@ -1,4 +1,4 @@
-# Django settings for klap3 project.
+"Django settings for kelp project."
 import os
 SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
 
@@ -7,18 +7,21 @@ TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
     # ('Your Name', 'your_email@domain.com'),
-	('Deason', 'wddr47@mst.edu'),
+    ('Deason', 'wddr47@mst.edu'),
     ('Josh Bohde', 'josh.bohde@gmail.com'),
 )
 
 MANAGERS = ADMINS
-#change this to mysql to be official, i've got it set to sqlite3 for development 
+#change this to mysql to be official
 DATABASE_ENGINE = 'sqlite3' # 'postgresql', 'mysql', 'sqlite3' or 'ado_mssql'.
-DATABASE_NAME = os.path.join(SITE_ROOT, 'kelpdb') # Or path to database file if using sqlite3.
+# Or path to database file if using sqlite3.
+DATABASE_NAME = os.path.join(SITE_ROOT, 'kelpdb')
 DATABASE_USER = ''          # Not used with sqlite3.
-DATABASE_PASSWORD = ''      # Not used with sqlite3. 
-DATABASE_HOST = ''          # Set to empty string for localhost. Not used with sqlite3.
-DATABASE_PORT = ''          # Set to empty string for default. Not used with sqlite3.
+DATABASE_PASSWORD = ''      # Not used with sqlite3.
+DATABASE_HOST = ''
+# Set to empty string for localhost. Not used with sqlite3.
+DATABASE_PORT = ''
+# Set to empty string for default. Not used with sqlite3.
 
 # Local time zone for this installation. All choices can be found here:
 # http://www.postgresql.org/docs/current/static/datetime-keywords.html#DATETIME-TIMEZONE-SET-TABLE
@@ -70,7 +73,7 @@ TEMPLATE_DIRS = (
 )
 
 #TEMPLATE_CONTEXT_PROCESSORS = (
-	#'django.core.context_processors.auth',
+    #'django.core.context_processors.auth',
 #)
 
 INSTALLED_APPS = (
