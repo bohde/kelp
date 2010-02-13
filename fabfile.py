@@ -67,8 +67,10 @@ def deploy():
 
 def remote_deploy():
     "Deploy when not on campus."
-    local('sudo vpnc')
+    with settings(warn_only=True):
+        local('sudo vpnc')
     try:
         deploy()
     finally:
-        local('sudo vpnc-disconnect')
+        with settings(warn_only=True):
+            local('sudo vpnc-disconnect')
