@@ -43,7 +43,7 @@ def restart_database():
 
 def push_to_server():
     "Merge into the marconi deploy branch."
-    local("git checkout -f marconi_deploy")
+    local("git checkout marconi_deploy")
     local("git merge master")
     local("git svn dcommit")
     local("git checkout master")
