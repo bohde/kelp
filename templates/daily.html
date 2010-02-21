@@ -14,7 +14,7 @@
 	{% for s in b.slots %}
 	<tr class="{% cycle 'even' 'odd'%}">
     {% if s.program.url %}
-       <td><a href={{ s.program.url }}>{{ s.program.name }}</a></td>
+       <td><a href={{ s.url }}>{{ s.program.name }}</a></td>
     {% else %}
        <td>{{s.program.name}}</td>
     {% endif %}

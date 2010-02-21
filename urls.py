@@ -16,6 +16,7 @@ urlpatterns = patterns('',
     url(r'^$', direct_to_template, {'template': 'generic.html'},
         name="kelp-index"),
     (r'^', include('kelp.program_log.urls')),
+    (r'^programming/', include('kelp.programming.urls')),                       
 )
 
 urlpatterns += patterns('',

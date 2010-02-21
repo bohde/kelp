@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block pageTitle %}Programming - Sciam{% endblock %}
+
+{% block header %}
+{% endblock %}
+
+{% block body %}
+
+{% for item in items %}
+
+<p>{{ item.date }}: <a href="{{ item.link }}">{{ item.title }} [{{ item.duration }}]</a></p>
+<form action='{% url log-add-entry program %}' method='POST'>
+<td><input type='hidden' name = 'notes' id='notesbox'
+     value="{{ item.title }}"/></td>
+<td><input class='center' type='submit' value='Log Me!'/></td>
+</form>
+
+{% endfor %}
+
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

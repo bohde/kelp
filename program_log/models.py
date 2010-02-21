@@ -1,6 +1,7 @@
 from django.db import models
 from itertools import chain
 from django.contrib.auth.models import User
+from django.template import Context, Template
 import datetime
 
 # Create your models here.
@@ -10,6 +11,7 @@ class Program(models.Model):
 
     def __unicode__(self):
         return str(self.name)
+
                 
 class ProgramBlock(models.Model):
     start = models.TimeField()
@@ -58,6 +60,13 @@ class ProgramSlot(models.Model):
             return e
         except:
             return False
+
+    def url(self):
+        t = Template(self.program.url)
+        c = Context({"pk":self.pk,
+                     "active":self.active,
+                     "time":self.time})
+        return t.render(c)
                                 
 class Entry(models.Model):
     #Individual program log entry
