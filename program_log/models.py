@@ -106,7 +106,9 @@ class Entry(models.Model):
     time = models.TimeField(auto_now_add=True)
     notes = models.CharField(max_length=64)
     user = models.ForeignKey(User)
-    
+    class Meta:
+        unique_together = (("slot", "date"),)
+
     def __unicode__(self):
         return str(self.time)
 
@@ -124,20 +126,29 @@ class Entry(models.Model):
         today = datetime.date.today()
         tomorrow = today + datetime.timedelta(days=1)
 
+        # Let's see if we can add it today.
         start = datetime.datetime.combine(today, slot.time.start) - diff
         end = datetime.datetime.combine(today, slot.time.end) + diff
 
         if start < now < end :
-            e = Entry.objects.create(user=user, slot=slot, notes=notes)        
+            try:
+                Entry.objects.create(user=user, slot=slot, notes=notes)        
+            except:
+                pass
             return True
 
+        # Today didn't work, how about tomorrow?
         start = datetime.datetime.combine(tomorrow, slot.time.start) - diff
         end = datetime.datetime.combine(tomorrow, slot.time.end) + diff
 
         if start < now < end :
-            e = Entry.objects.create(user=user, slot=slot, notes=notes, date=tomorrow)
+            try:
+                Entry.objects.create(user=user, slot=slot, notes=notes, date=tomorrow)
+            except:
+                pass
             return True
         
+        # Frak, the user messed up.
         return False
 
         
