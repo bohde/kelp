@@ -34,7 +34,7 @@ def showdaily(request):
 
 @login_required
 def show_this_show(request):
-    blocks = ProgramBlock.next_n_hours(3)
+    blocks = ProgramSlot.next_n_hours(3)
     return render_to_response("daily.html", {"blocks":blocks},
                               context_instance=RequestContext(request))
 
@@ -46,6 +46,8 @@ def addentry(request,slot):
         n = ''
         try:
             n = request.POST['notes']
+            if n == "Title":
+                n = ''
         except KeyError:
             pass
         if Entry.add_entry(request.user, s, n, HOURS_LEEWAY):
