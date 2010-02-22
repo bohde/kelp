@@ -28,7 +28,7 @@ except:
 
 @login_required	
 def showdaily(request):
-    blocks = ProgramBlock.objects.all()
+    blocks = ProgramSlot.get_slots()
     return render_to_response("daily.html", {"blocks":blocks},
                               context_instance=RequestContext(request))
 
@@ -46,7 +46,6 @@ def addentry(request,slot):
         n = ''
         try:
             n = request.POST['notes']
-            n = '' if  n == 'Title' else n
         except KeyError:
             pass
         if Entry.add_entry(request.user, s, n, HOURS_LEEWAY):

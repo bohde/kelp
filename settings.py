@@ -62,7 +62,10 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.middleware.doc.XViewMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
+
+INTERNAL_IPS = ('127.0.0.1',)
 
 ROOT_URLCONF = 'kelp.urls'
 
@@ -85,6 +88,7 @@ INSTALLED_APPS = (
     'django.contrib.humanize',
     'django.contrib.databrowse',
     'kelp.program_log',
+    'debug_toolbar',
 )
 
 LOGIN_REDIRECT_URL = '/'

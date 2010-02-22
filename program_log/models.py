@@ -1,6 +1,7 @@
 from django.db import models
 from itertools import chain
 from django.contrib.auth.models import User
+from collections import defaultdict
 import datetime
 
 # Create your models here.
@@ -17,10 +18,6 @@ class ProgramBlock(models.Model):
 
     def __unicode__(self):
         return str(self.start)
-
-    def slots(self):
-        slots = ProgramSlot.objects.filter(time=self)
-        return slots
 
     def current(self):
         time = datetime.datetime.now()
@@ -52,13 +49,18 @@ class ProgramSlot(models.Model):
     def __unicode__(self):
         return str(self.time) + " - " + str(self.program)
 
-    def isdone(self):
-        try:
-            e = Entry.objects.filter(date=datetime.datetime.today).get(slot=self)
-            return e
-        except:
-            return False
-                                
+    @staticmethod
+    def get_slots():
+        slots = ProgramSlot.objects.filter(active=True).all().select_related('program', 'time')
+        entries = Entry.get_todays()
+
+        blocks = defaultdict(list)
+        for s in slots:
+            blocks[s.time].append(s)
+            s.isdone = entries.get(s, False)
+        return blocks.items()
+
+                 
 class Entry(models.Model):
     #Individual program log entry
     slot = models.ForeignKey(ProgramSlot)
@@ -88,6 +90,13 @@ class Entry(models.Model):
             e = Entry.objects.create(user=user, slot=slot, notes=notes)
             return True
         return False
+
+    @staticmethod
+    def get_todays():
+        entries = {}
+        for entry in Entry.objects.filter(date=datetime.datetime.today).select_related('slot'):
+            entries[entry.slot] = entry
+        return entries
         
 class Report(models.Model):
     class Meta:
