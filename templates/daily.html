@@ -5,6 +5,38 @@
 {% block header %}
 {% endblock %}
 
+{% block js %}
+function activatePlaceholders() {
+    var detect = navigator.userAgent.toLowerCase(); 
+    if (detect.indexOf("safari") > 0) return false;
+    var inputs = document.getElementsByTagName("input");
+    for (var i=0;i<inputs.length;i++) {
+        if (inputs[i].getAttribute("type") == "text") {
+            var placeholder = inputs[i].getAttribute("placeholder");
+            if (placeholder.length > 0) {
+                inputs[i].value = placeholder;
+                inputs[i].onclick = function() {
+                    if (this.value == this.getAttribute("placeholder")) {
+                        this.value = "";
+                    }
+                    return false;
+                }
+                inputs[i].onblur = function() {
+                    if (this.value.length < 1) {
+                        this.value = this.getAttribute("placeholder");
+                    }
+                }
+            }
+        }
+    }
+}
+
+window.onload = function() {
+    activatePlaceholders();
+}
+{% endblock %}
+
+
 {% block body %}
 
 
@@ -23,8 +55,8 @@
             <td class="timestamp">{{s.isdone.user.first_name}}<br/>at {{s.isdone.time|time}}</td>
 		{%else%}
 			<form action='{% url log-add-entry s.id %}' method='POST'>
-            <td><input type='text' name = 'notes' id='notesbox'
-			     onfocus="this.value=''" value="Title"/></td>
+            <td><input type="text" name='notes' id='notesbox'
+			     placeholder="Title"/></td>
 			<td><input class='center' type='submit' value='add'/></td>
 			</form>
 		{% endif %}
