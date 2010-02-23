@@ -41,9 +41,9 @@ window.onload = function() {
 
 
 <table id='logtable'>
-{% for b in blocks %}
+{% for b, slots in blocks %}
 	<tr><th colspan='4' {% if b.current %}class='current'{% endif %}>{{b.start|time}}</th></tr>
-	{% for s in b.slots %}
+	{% for s in slots %}
 	<tr class="{% cycle 'even' 'odd'%}">
     {% if s.program.url %}
        <td><a href={{ s.program.url }}>{{ s.program.name }}</a></td>
