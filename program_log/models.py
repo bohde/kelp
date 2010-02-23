@@ -34,7 +34,8 @@ def slotify(f):
             blocks[s.time].append(s)
             s.isdone = entries.get(s, False)
             s.time.key = k
-        return sorted(blocks.items(), key=lambda (k,v):k.key)
+        return sorted(((k,sorted(v, key=lambda s:s.pk)) for k,v in blocks.items()),
+                      key=lambda (k,v):k.key)
     return inner
 
 class ProgramSlot(models.Model):
