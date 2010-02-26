@@ -80,7 +80,7 @@ class ProgramSlot(models.Model):
         slots = ProgramSlot.objects.filter(time__start__gte=now).select_related('program', 'time')
         entries = Entry.objects.filter(date=today).select_related()
         entries = entries.filter(slot__time__start__gte=now).order_by('time')
-        if end_hour > 24:
+        if end_hour > 23:
             slots = slots.order_by('time__start')
             other = ProgramSlot.objects.filter(time__end__lte=end).order_by('time__start')
             other = other.select_related('program', 'time')
