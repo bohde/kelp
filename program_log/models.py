@@ -60,7 +60,7 @@ class ProgramSlot(models.Model):
 
         def todays_entries():
             entries = {}
-            for entry in Entry.objects.filter(date=datetime.datetime.today).select_related('slot'):
+            for entry in Entry.objects.filter(date=datetime.datetime.today).select_related():
                 entries[entry.slot] = entry
             return entries
 
@@ -78,7 +78,7 @@ class ProgramSlot(models.Model):
         today = datetime.datetime.today()
 
         slots = ProgramSlot.objects.filter(time__start__gte=now).select_related('program', 'time')
-        entries = Entry.objects.filter(date=today).select_related('slot')
+        entries = Entry.objects.filter(date=today).select_related()
         entries = entries.filter(slot__time__start__gte=now).order_by('time')
         if end_hour > 23:
             slots = slots.order_by('time__start')
@@ -93,7 +93,7 @@ class ProgramSlot(models.Model):
             entries = chain(entries, tomorrows_entries)
         else:
             slots = slots.filter(time__end__lte=end).order_by('time__start')
-            entries = entries.filter(slot__time__end__lte=end).select_related('slot').order_by('time')
+            entries = entries.filter(slot__time__end__lte=end).select_related().order_by('time')
 
 
         entry_dict = {}

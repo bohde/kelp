@@ -75,9 +75,9 @@ TEMPLATE_DIRS = (
     os.path.join(SITE_ROOT, 'templates'),
 )
 
-#TEMPLATE_CONTEXT_PROCESSORS = (
-    #'django.core.context_processors.auth',
-#)
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.core.context_processors.auth',
+)
 
 INSTALLED_APPS = (
     'django.contrib.auth',
