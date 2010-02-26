@@ -27,12 +27,15 @@ class ProgramBlock(models.Model):
 
 def slotify(f):
     @wraps(f)
-    def inner(*args, **kwargs):
+    def inner(user, *args, **kwargs):
         blocks = defaultdict(list)
         slots, entries = f(*args, **kwargs)
         for k,s in enumerate(slots):
             blocks[s.time].append(s)
-            s.isdone = entries.get(s, False)
+            e = entries.get(s, False)
+            if e:
+                e.can_undo = (e.within_time(10) and e.is_mine(user))
+            s.isdone = e
             s.time.key = k
         return sorted(((k,sorted(v, key=lambda s:s.pk)) for k,v in blocks.items()),
                       key=lambda (k,v):k.key)
@@ -113,6 +116,12 @@ class Entry(models.Model):
     def __unicode__(self):
         return str(self.time)
 
+    def is_mine(self, user):
+        return user==self.user
+
+    def within_time(self, minutes):
+        return (datetime.datetime.now() - datetime.timedelta(minutes=minutes)).time() < self.time
+
     @staticmethod
     def get_first_date():
         try:
@@ -144,7 +153,7 @@ class Entry(models.Model):
 
         if start < now < end :
             try:
-                Entry.objects.create(user=user, slot=slot, notes=notes, date=tomorrow)
+                Entry.objects.create(user=user, slot=slot, notes=notes)
             except:
                 pass
             return True
