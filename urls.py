@@ -15,19 +15,19 @@ admin.autodiscover()
 urlpatterns = patterns('',
     url(r'^$', direct_to_template, {'template': 'generic.html'},
         name="kelp-index"),
-    (r'^', include('kelp.program_log.urls')),
-    (r'^programming/', include('kelp.programming.urls')),                       
+    url(r'^programming/', include('kelp.programming.urls')),                       
+    url(r'^', include('kelp.program_log.urls')),
 )
 
 urlpatterns += patterns('',
   # Media
-  (r'^site_media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': 'media'}),
+  url(r'^site_media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': 'media'}),
 
   # Uncomment this for admin. This should be disabled for the production site
-  (r'^admin/(.*)', admin.site.root),
-  (r'^databrowse/(.*)', databrowse.site.root),
+  url(r'^admin/(.*)', admin.site.root),
+  url(r'^databrowse/(.*)', databrowse.site.root),
   url(r'^accounts/login/$', 'django.contrib.auth.views.login', name='kelp-login'),
-  (r'^accounts/logout/$', kelp_logout),
+  url(r'^accounts/logout/$', kelp_logout),
 
 )
 admin.site.register(DiskJockey)
@@ -40,7 +40,6 @@ class SlotInline(admin.TabularInline):
     "Inline Slots for Program Slots in Admin."
     model = ProgramSlot
     extra = 5
-
 
 class ProgramBlockAdmin(admin.ModelAdmin):
     "Give Program Blocks the ability to program slots inline."

@@ -62,7 +62,10 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.middleware.doc.XViewMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
+
+INTERNAL_IPS = ('127.0.0.1',)
 
 ROOT_URLCONF = 'kelp.urls'
 
@@ -71,10 +74,6 @@ TEMPLATE_DIRS = (
     # Always use forward slashes, even on Windows.
     os.path.join(SITE_ROOT, 'templates'),
 )
-
-#TEMPLATE_CONTEXT_PROCESSORS = (
-    #'django.core.context_processors.auth',
-#)
 
 INSTALLED_APPS = (
     'django.contrib.auth',
@@ -86,6 +85,8 @@ INSTALLED_APPS = (
     'django.contrib.databrowse',
     'kelp.program_log',
     'kelp.programming',
+    'south',
+    'debug_toolbar',
 )
 
 LOGIN_REDIRECT_URL = '/'

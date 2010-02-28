@@ -1,9 +1,10 @@
 from collections import defaultdict
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
+from functools import wraps
 
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect, Http404
+from django.http import HttpResponseRedirect, Http404, HttpResponseForbidden
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 
@@ -28,13 +29,13 @@ except:
 
 @login_required	
 def showdaily(request):
-    blocks = ProgramBlock.objects.all()
+    blocks = ProgramSlot.get_slots(request.user)
     return render_to_response("daily.html", {"blocks":blocks},
                               context_instance=RequestContext(request))
 
 @login_required
 def show_this_show(request):
-    blocks = ProgramBlock.next_n_hours(3)
+    blocks = ProgramSlot.next_n_hours(request.user, 3)
     return render_to_response("daily.html", {"blocks":blocks},
                               context_instance=RequestContext(request))
 
@@ -46,7 +47,8 @@ def addentry(request,slot):
         n = ''
         try:
             n = request.POST['notes']
-            n = '' if  n == 'Title' else n
+            if n == "Title":
+                n = ''
         except KeyError:
             pass
         if Entry.add_entry(request.user, s, n, HOURS_LEEWAY):
@@ -54,6 +56,25 @@ def addentry(request,slot):
         return render_to_response("error.html",
                         {"message":"You attempted to add the entry out of the time range."},
                         context_instance=RequestContext(request))
+    return HttpResponseRedirect(reverse("log-show-current",))
+
+
+def my_entry(f):
+    @wraps(f)
+    def inner(request, entry_pk):
+        entry = get_object_or_404(Entry, pk=entry_pk)
+        if not(entry.is_mine(request.user)):
+            raise Http404
+        return f(request, entry)
+    return inner
+
+@login_required
+@my_entry
+def undo(request, entry):
+    if entry.within_time(10):
+        entry.delete()
+    else:
+        return HttpResponseForbidden("Forbidden: That time was more than 10 minute ago.")
     return HttpResponseRedirect(reverse("log-show-current",))
 
 @permission_required('kelp.view_reports')

@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <link rel="stylesheet" href="/site_media/style.css" />
+  <link rel="stylesheet" href="{{MEDIA_URL}}style.css" />
   <title>{% block title %} KELP - {% block pageTitle %} {% endblock %} {% endblock %}</title>
 </head>
 {% block head %} {% endblock %}
@@ -16,7 +16,7 @@
 <div class='header'>
 
 	
-  <img src='/site_media/logo-white.png' class='logo' 
+  <img src='{{MEDIA_URL}}logo-white.png' class='logo' 
 	   alt='Kmnr Electronic Logging Platform' 
 	   title='Kmnr Electronic Logging Platform'>
 	
@@ -28,7 +28,7 @@
         <li><a href='{% url log-show-report %}'>Reports</a></li>
     {% endif %}
     <li class='name'>
-    {% if user.is_authenticated %}
+    {% if perms.is_authenticated %}
       <a href='{% url kelp.views.kelp_logout %}'>
         Logout {% if user.first_name %}{{ user.first_name }}{% else %}{{ user.username }}{% endif %}
       </a>

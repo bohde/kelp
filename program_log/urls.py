@@ -7,6 +7,7 @@ urlpatterns = patterns('',
   url(r'^showschedule$', showdaily, name="log-show-daily"),
   url(r'^show$', show_this_show, name="log-show-current"),                       
   url(r'^add/(?P<slot>\d+)$', addentry, name="log-add-entry"),
+  url(r'^undo/(?P<entry_pk>\d+)$', undo, name="log-undo-entry"),
   url(r'^report/(\d{4})/(\w+)/(\w+)$', gen_report, name="log-gen-report"),
   url(r'^report$', show_reports, name="log-show-report"),
 )
