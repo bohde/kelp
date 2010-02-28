@@ -64,6 +64,8 @@ class EntryTests(TestCase):
     def testTimeOutOfRange(self):
         try:
             e = get_object_or_404(Entry, pk=1)
+            timestamp = datetime.datetime.combine(e.date, e.time)
+            self.assertTrue(timestamp < datetime.datetime.now() - datetime.timedelta(minutes=10), "The time on the entry is not older than 10 minutes!")
         except Http404, e:
             self.fail("Entry 1 doesn't exist.")
             

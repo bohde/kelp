@@ -1,9 +1,11 @@
 """
 Fabfile to deploy to KMNR's Marconi server.
 """
-from fabric.api import local, settings, abort, sudo, require, cd, env
+from fabric.api import local, settings, abort, sudo, require, cd, env, roles, run
 from fabric.contrib.console import confirm
-
+import os
+import functools
+import itertools
 
 def production():
     "Set the variables for the production environment"
@@ -11,6 +13,54 @@ def production():
     env.hosts = env.fab_hosts
     env.fab_user = "jabc59"
 
+def hms():
+    "Setup the environment for hms_beatdown"
+    env.roledefs = {
+        "web":["django@10.138"],
+        "sudo":["joshbohde@10.138"],
+    }
+    env.roles = ["web", "sudo"]
+    env.web_root = "/home/django"
+    env.code_root = os.path.join(env.web_root, "kelp")
+
+def only_these_roles(*roles_list):
+    role_set = set(roles_list)
+    def func_wrapper(f):
+        f = roles(*roles_list)(f)
+        @functools.wraps(f)
+        def inner(*args, **kwargs):
+            s = set(itertools.chain(*[x for k,x in env.roledefs.iteritems() if k in role_set]))
+            if env.host_string not in s:
+                return None
+            else:
+                return f(*args, **kwargs)
+        return inner
+    return func_wrapper
+
+@only_these_roles("web")    
+def git_update():
+    "Update the remote from git."
+    with cd(env.code_root):
+        run("git pull")
+
+@only_these_roles("web")
+def remote_test():
+    "Test the app on the remote server"
+    with cd(env.code_root):
+        with settings(warn_only=True):
+            result = run("./manage.py test program_log")
+            if result.failed and not confirm("Remote tests failed. Continue anyway?"):
+                abort("Aborting at user request.")
+
+@only_these_roles("sudo")
+def remote_refresh():
+    sudo("pkill -HUP supervisor")
+
+def home_deploy():
+    test()
+    git_update()
+    remote_test()
+    remote_refresh()
 
 def test():
     "Run the Djano tests."
