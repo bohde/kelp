@@ -96,3 +96,29 @@ body {
     margin: 0;
     margin-left: 3px;
 }
+
+.title {
+    float:left;
+    margin-right:10px;
+    width: 360px;
+}
+.button {
+    float: right;
+}
+.date {
+    font-size: .6em;
+    clear: both;
+    margin-bottom: 1px;
+    font-style: italic;
+}
+
+.description{
+    margin-top: 1px;
+    font-size: .9em;
+}
+
+.entries{
+    width: 480px;
+    margin-left: auto;
+    margin-right: auto;
+}
