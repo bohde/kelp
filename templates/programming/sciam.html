@@ -8,7 +8,7 @@
 
 {% for item in items %}
 
-<p>{{ item.date }}: <a href="{{ item.link }}">{{ item.title }} [{{ item.duration }}]</a></p>
+<p>{{ item.date|date }}: <a href="{{ item.audio_file }}">{{ item.title }} [{{ item.length }}]</a></p>
 <form action='{% url log-add-entry program %}' method='POST'>
 <td><input type='hidden' name = 'notes' id='notesbox'
      value="{{ item.title }}"/></td>
