@@ -23,6 +23,17 @@ def hms():
     env.web_root = "/home/django"
     env.code_root = os.path.join(env.web_root, "kelp")
 
+def remote():
+    "Setup the environment for remote hms_beatdown"
+    env.roledefs = {
+        "web":["django@git.joshbohde.com"],
+        "sudo":["joshbohde@git.joshbohde.com"],
+    }
+    env.roles = ["web", "sudo"]
+    env.web_root = "/home/django"
+    env.code_root = os.path.join(env.web_root, "kelp")
+
+
 def only_these_roles(*roles_list):
     role_set = set(roles_list)
     def func_wrapper(f):
