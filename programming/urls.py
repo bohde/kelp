@@ -1,5 +1,5 @@
 from django.conf.urls.defaults import *
-from programming.views import *
+from views import *
 
 urlpatterns = patterns('',
   url(r'^$', feeds, name="programming-list-feeds"),                       

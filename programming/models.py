@@ -1,12 +1,11 @@
 from django.db import models
-from program_log.models import Program
 import feedparser
 import dateutil
 import datetime
     
 class ProgrammingFeed(models.Model):
     short_name = models.SlugField(primary_key=True)
-    program = models.ForeignKey(Program)
+    program = models.ForeignKey('program_log.Program')
     feed_url = models.URLField()
     etag = models.CharField(max_length=50, blank=True, editable=False)
     modified = models.DateTimeField(null=True, editable=False)
