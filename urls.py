@@ -7,6 +7,7 @@ from django.views.generic.simple import direct_to_template
 
 from models import DiskJockey, Semester, ShowBlock, Show
 from program_log.models import Program, ProgramSlot, Entry, Quarter, Report, ProgramBlock
+from programming.models import ProgrammingFeed, ProgrammingAudio
 from views import kelp_logout
 
 
@@ -51,3 +52,5 @@ admin.site.register(ProgramSlot)
 admin.site.register(Entry)
 admin.site.register(Quarter)
 admin.site.register(Report)
+admin.site.register(ProgrammingFeed)
+admin.site.register(ProgrammingAudio)

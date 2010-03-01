@@ -6,23 +6,23 @@ from django.http import HttpResponse
 
 from parsers import load_sci, load_psych
 
-from models import ProgrammingAudio
+from models import ProgrammingAudio, ProgrammingFeed
 
 @login_required
-def sci_am(request, program, feed):
-    items = feed()
-    return render_to_response("programming/sciam.html", locals(),
+def feed(request, program, feed):
+    prog = get_object_or_404(ProgrammingFeed, pk=feed)
+    prog.refresh_feed()
+    ret = {"feed": prog,
+           "program":program,
+           "entries":prog.programmingaudio_set.all()}
+    return render_to_response("programming/sciam.html", ret,
                               context_instance=RequestContext(request))
 
-def sixty_second_sci(request, program):
-    get_sci = lambda: ProgrammingAudio.get_feed("sci")
-    return sci_am(request, program, get_sci)
-
-def sixty_second_psych(request, program):
-    get_psych = lambda: ProgrammingAudio.get_feed("psych")
-    return sci_am(request, program, get_psych)
-
-def load(request):
-    load_sci()
-    load_psych()
-    return HttpResponse()
+@login_required
+def feeds(request):
+    feeds = ProgrammingFeed.objects.all().only("title", "short_name")
+    ret = {"feeds":feeds,
+           "program":0,
+           }
+    return render_to_response("programming/feeds.html", ret, 
+                              context_instance=RequestContext(request))

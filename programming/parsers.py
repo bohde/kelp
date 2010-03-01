@@ -1,5 +1,5 @@
-from BeautifulSoup import BeautifulStoneSoup
 import urllib2
+import feedparser
 from dateutil import parser
 from models import ProgrammingAudio
 

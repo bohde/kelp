@@ -1,7 +1,6 @@
 from django.db import models
 from itertools import chain
 from django.contrib.auth.models import User
-from django.template import Context, Template
 from collections import defaultdict
 from functools import wraps
 from datetime import datetime, time, timedelta, date
@@ -54,17 +53,17 @@ class ProgramSlot(models.Model):
     def __unicode__(self):
         return str(self.time) + " - " + str(self.program)
 
-    def url(self):
-        t = Template(self.program.url)
-        c = Context({"pk":self.pk,
-                     "active":self.active,
-                     "time":self.time})
-        return t.render(c)
-                                
+    def getfeed(self):
+        f = self.program.programmingfeed_set.all()
+        if f:
+            return f[0].short_name
+        else:
+            return False
+
     @staticmethod
     @slotify
     def get_slots():
-        slots = ProgramSlot.objects.filter(active=True).all().select_related('program', 'time')
+        slots = ProgramSlot.objects.filter(active=True).all().select_related('program', 'time', 'programmingfeed_set')
         slots = slots.order_by('time__start')
 
         def todays_entries():
@@ -74,7 +73,6 @@ class ProgramSlot(models.Model):
             return entries
 
         return slots, todays_entries()
-
 
     @staticmethod
     @slotify

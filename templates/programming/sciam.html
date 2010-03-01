@@ -6,11 +6,11 @@
 
 {% block body %}
 
-{% for item in items %}
+{% for item in entries %}
 
 <div class="entries">
 <div class="title">
-<a class="title" href="{{ item.audio_file }}">{{ item.title }} [{{ item.length }}]</a>
+<a class="title" href="{{ item.link }}">{{ item.title }} [{{ item.length }}]</a>
 </div>
 <form class="button" action='{% url log-add-entry program %}' method='POST'>
 <td><input type='hidden' name = 'notes' id='notesbox'
