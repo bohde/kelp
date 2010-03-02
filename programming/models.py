@@ -1,18 +1,28 @@
 from django.db import models
 import feedparser
-import dateutil
 import datetime
+from parsers import default
+
+PARSER_FUNCTIONS = {
+    "d":default,
+}
+
+PARSER_CHOICES = (
+    ("d", "default"),
+)
     
 class ProgrammingFeed(models.Model):
     short_name = models.SlugField(primary_key=True)
-    program = models.ForeignKey('program_log.Program')
+    title = models.CharField(max_length=100)
     feed_url = models.URLField()
     etag = models.CharField(max_length=50, blank=True, editable=False)
     modified = models.DateTimeField(null=True, editable=False)
+    parse_method = models.CharField(max_length=1, choices=PARSER_CHOICES, default="d")
+
+    def __unicode__(self):
+        return str(self.title)
     
     def refresh_feed(self):
-        kwargs = {}
-
         mod = self.modified.timetuple() if self.modified else None
 
         feed = feedparser.parse(self.feed_url, etag=self.etag, modified=mod)
@@ -22,27 +32,9 @@ class ProgrammingFeed(models.Model):
         self.modified = datetime.datetime(*feed.modified[0:6])
         self.save()
 
-        kwargs["feed"] = self
+        process_entry = PARSER_FUNCTIONS[self.parse_method](self)
 
-        def process_entry(entry):
-            def take_first_key(*keys):
-                for k in keys:
-                    v = entry.get(k, '')
-                    if v:
-                        return v
-                return ''
-            tfk = take_first_key
-            kwargs["date"] = dateutil.parser.parse(tfk("date")).date()
-            kwargs["title"] = tfk("title")
-            kwargs["length"] = tfk("duration", "itunes_duration")
-            kwargs["link"] = tfk("link")
-            try:
-                kwargs["description"] = entry.content[0].value
-            except AttributeError:
-                kwargs["description"] = tfk("summary", "description")
-            return ProgrammingAudio.new(**kwargs)
-
-        self.new_entries = sum([process_entry(entry) for entry in feed.entries])
+        self.new_entries = sum([ProgrammingAudio.new(**process_entry(entry)) for entry in feed.entries])
         return bool(self.new_entries)
     
 class ProgrammingAudio(models.Model):

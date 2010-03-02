@@ -63,9 +63,11 @@ window.onload = function() {
 			     placeholder="Title"/></td>
 			<td><input class='center' type='submit' value='add'/></td>
 			</form>
-	        {% if s.getfeed %}
-                 <td><a href='{% url programming-feed s.getfeed s.id %}'>Hey! Try this one!</a></td>
+            <td>
+	        {% if s.program.feed %}
+                <a href='{% url programming-feed s.program.feed s.id %}'>Hey! Try this one!</a>
             {% endif %}
+            </td>
       	{% endif %}
 	</tr>
 	{% endfor %}

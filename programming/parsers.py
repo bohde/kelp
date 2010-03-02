@@ -1,42 +1,25 @@
 import urllib2
 import feedparser
 from dateutil import parser
-from models import ProgrammingAudio
 
-def parse_sci_am(link, limit=None):
-    page = urllib2.urlopen(link)
-    soup = BeautifulStoneSoup(page, convertEntities=BeautifulStoneSoup.ALL_ENTITIES)
-    items = soup.findAll('item', limit=limit)
+def take_first_key(e,*keys):
+    for k in keys:
+        v = e.get(k, '')
+        if v:
+            return v
+    return ''
 
-    def get_dict(item):
-        dur = item.find('itunes:duration').string
-        title = item.title.string
-        link = item.link.string
-        d = item.find('pubdate').string
-        date = parser.parse(d)
-        desc = item.find('itunes:summary').string
-        return {"duration":dur,
-                "title":title,
-                "link":link,
-                "date":date.date(),
-                "description":desc,
-                }
-
-    return (get_dict(i) for i in items)
-
-def load_sci():
-    for d in  parse_sci_am("http://rss.sciam.com/sciam/60secsciencepodcast", 10):
+def default(feed):
+    kwargs = {"feed":feed}
+    def process_entry(entry):
+        tfk = lambda *keys: take_first_key(entry, *keys)
+        kwargs["date"] = parser.parse(tfk("date")).date()
+        kwargs["title"] = tfk("title")
+        kwargs["length"] = tfk("duration", "itunes_duration")
+        kwargs["link"] = tfk("link")
         try:
-            ProgrammingAudio.objects.create(short_name="sci", date=d["date"], length=d["duration"],
-                                title=d["title"], audio_file=d["link"], description=d["description"])
-        except Exception, e:
-            print e
-    
-def load_psych():
-    for d in  parse_sci_am("http://rss.sciam.com/sciam/60-second-psych", 5):
-        try:
-            ProgrammingAudio.objects.create(short_name="psych", date=d["date"], length=d["duration"],
-                                title=d["title"], audio_file=d["link"], description=d["description"])
-        except Exception, e:
-            print e
-
+            kwargs["description"] = entry.content[0].value
+        except AttributeError:
+            kwargs["description"] = tfk("summary", "description")
+        return kwargs
+    return process_entry
