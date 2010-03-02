@@ -1,14 +1,18 @@
 from django.db import models
 import feedparser
 import datetime
-from parsers import default
+from parsers import default, enclosures, earth_sky
 
 PARSER_FUNCTIONS = {
     "d":default,
+    "e":enclosures,
+    "s":earth_sky,
 }
 
 PARSER_CHOICES = (
     ("d", "default"),
+    ("e", "enclosures"),
+    ("s", "earth_sky"),
 )
     
 class ProgrammingFeed(models.Model):

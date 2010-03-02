@@ -23,3 +23,34 @@ def default(feed):
             kwargs["description"] = tfk("summary", "description")
         return kwargs
     return process_entry
+
+def enclosures(feed):
+    kwargs = {"feed":feed}
+    def process_entry(entry):
+        tfk = lambda *keys: take_first_key(entry, *keys)
+        kwargs["date"] = parser.parse(tfk("date")).date()
+        kwargs["title"] = tfk("title")
+        kwargs["length"] = tfk("duration", "itunes_duration")
+        kwargs["link"] = entry.enclosures[0]["href"]
+        try:
+            kwargs["description"] = entry.content[0].value
+        except AttributeError:
+            kwargs["description"] = tfk("summary", "description")
+        return kwargs
+    return process_entry
+    
+def earth_sky(feed):
+    kwargs = {"feed":feed}
+    def process_entry(entry):
+        tfk = lambda *keys: take_first_key(entry, *keys)
+        kwargs["date"] = parser.parse(tfk("date")).date()
+        kwargs["title"] = tfk("title")
+        kwargs["length"] = "1:30"
+        kwargs["link"] = [e["href"] for e in entry.enclosures
+                          if e["href"].endswith("-90.mp3")][0]
+        try:
+            kwargs["description"] = entry.content[0].value
+        except AttributeError:
+            kwargs["description"] = tfk("summary", "description")
+        return kwargs
+    return process_entry
