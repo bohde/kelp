@@ -87,6 +87,9 @@ INSTALLED_APPS = (
     'kelp.programming',
     'south',
     'debug_toolbar',
+    'django_nose',
 )
+
+TEST_RUNNER = 'django_nose.run_tests'
 
 LOGIN_REDIRECT_URL = '/'

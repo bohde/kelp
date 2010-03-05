@@ -45,11 +45,17 @@ window.onload = function() {
 	<tr><th colspan='4' {% if b.current %}class='current'{% endif %}>{{b.start|time}}</th></tr>
 	{% for s in slots %}
 	<tr class="{% cycle 'even' 'odd'%}">
-    {% if s.program.url %}
-       <td><a href={{ s.program.url }}>{{ s.program.name }}</a></td>
+    <td>
+	{% if s.program.feed %}
+       <a href='{% url programming-feed s.program.feed s.id %}'>{{ s.program.name }}</a>
     {% else %}
-       <td>{{s.program.name}}</td>
+    {% if s.program.url %}
+       <a href={{ s.program.url }}>{{ s.program.name }}</a>
+    {% else %}
+       {{s.program.name}}
     {% endif %}
+    {% endif %}
+    </td>
 		{% if s.isdone %}
 			<td><p class='notes'>{{s.isdone.notes}}</p></td>
             <td class="timestamp">{{s.isdone.user.first_name}}<br/>at {{s.isdone.time|time}} <br/>
@@ -64,9 +70,6 @@ window.onload = function() {
 			<td><input class='center' type='submit' value='add'/></td>
 			</form>
             <td>
-	        {% if s.program.feed %}
-                <a href='{% url programming-feed s.program.feed s.id %}'>Hey! Try this one!</a>
-            {% endif %}
             </td>
       	{% endif %}
 	</tr>
