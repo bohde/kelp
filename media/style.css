@@ -122,3 +122,13 @@ body {
     margin-left: auto;
     margin-right: auto;
 }
+#ymp-relevance { display:none !important; }
+.ymp-player-max #ymp-body { width:570px !important; }
+.ymp-player-max #ymp-body #ymp-body-strip { width:557px !important; }
+.ymp-player-max #ymp-body #ymp-body-base  { width:560px !important; }
+
+/* Yahoo! Media Player: Set background color */
+#ymp-player .ymp-color-main,
+#ymp-tray .ymp-color-tray {
+  background-color:#76923C !important;
+}
