@@ -46,8 +46,11 @@ def earth_sky(feed):
         kwargs["date"] = parser.parse(tfk("date")).date()
         kwargs["title"] = tfk("title")
         kwargs["length"] = "1:30"
-        kwargs["link"] = [e["href"] for e in entry.enclosures
-                          if e["href"].endswith("-90.mp3")][0]
+        try:
+            kwargs["link"] = [e["href"] for e in entry.enclosures
+                              if e["href"].endswith("-90.mp3")][0]
+        except:
+            return None
         try:
             kwargs["description"] = entry.content[0].value
         except AttributeError:

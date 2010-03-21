@@ -6,18 +6,16 @@ Replace these with more appropriate tests for your application.
 """
 
 from django.test import TestCase
+from parsers import earth_sky
+from models import ProgrammingFeed
 
-class SimpleTest(TestCase):
-    def test_basic_addition(self):
-        """
-        Tests that 1 + 1 always equals 2.
-        """
-        self.failUnlessEqual(1 + 1, 2)
+class TestParsers(TestCase):
+    fixtures = ['programming.json']
 
-__test__ = {"doctest": """
-Another way to test that 1 + 1 is equal to 2.
+    def testEarthAndSkyBug(self):
+        entry = {'author': u'EarthSky (deborahbyrd@earthsky.org)', 'author_detail': {'email': u'deborahbyrd@earthsky.org', 'name': u'EarthSky'}, 'comments': u'http://earthsky.org/earth/forest-service-expert-gives-us-forest-overview', 'content': [{'base': u'http://feeds.feedburner.com/earthsky', 'language': None, 'type': u'audio/mpeg', 'value': u''}, {'base': u'http://feeds.feedburner.com/earthsky', 'language': None, 'type': 'text/plain', 'value': u"Forests can't be left alone to take care of themselves, says Sally Collins of the U.S. Forest Service."}], 'enclosures': [{'href': u'http://earthsky.org/wp-content/uploads/2008/09/01e9_080915collins.mp3', 'length': u'9882677', 'type': u'audio/mpeg'}], 'guidislink': False, 'id': u'http://earthsky.org/earth/forest-service-expert-gives-us-forest-overview', 'itunes_explicit': 0, 'itunes_keywords': u'science,podcast,water,energy,health,agriculture,biodiversity,human,world,space', 'link': u'http://earthsky.org/earth/forest-service-expert-gives-us-forest-overview', 'links': [{'href': u'http://earthsky.org/earth/forest-service-expert-gives-us-forest-overview', 'rel': 'alternate', 'type': 'text/html'}], 'subtitle': u"Forests can't be left alone to take care of themselves, says Sally Collins of the U.S. Forest Service.", 'subtitle_detail': {'base': u'http://feeds.feedburner.com/earthsky', 'language': None, 'type': 'text/plain', 'value': u"Forests can't be left alone to take care of themselves, says Sally Collins of the U.S. Forest Service."}, 'summary': u'Forests can\'t be left alone to take care of themselves, says Sally Collins of the U.S. Forest Service.<div class="feedflare">\n<a href="http://feeds.feedburner.com/~ff/earthsky?a=AEgPagAO8MI:5HWJ_-6hDto:yIl2AUoC8zA"><img src="http://feeds.feedburner.com/~ff/earthsky?d=yIl2AUoC8zA" border="0" /></a> <a href="http://feeds.feedburner.com/~ff/earthsky?a=AEgPagAO8MI:5HWJ_-6hDto:V_sGLiPBpWU"><img src="http://feeds.feedburner.com/~ff/earthsky?i=AEgPagAO8MI:5HWJ_-6hDto:V_sGLiPBpWU" border="0" /></a> <a href="http://feeds.feedburner.com/~ff/earthsky?a=AEgPagAO8MI:5HWJ_-6hDto:cGdyc7Q-1BI"><img src="http://feeds.feedburner.com/~ff/earthsky?d=cGdyc7Q-1BI" border="0" /></a> <a href="http://feeds.feedburner.com/~ff/earthsky?a=AEgPagAO8MI:5HWJ_-6hDto:dnMXMwOfBR0"><img src="http://feeds.feedburner.com/~ff/earthsky?d=dnMXMwOfBR0" border="0" /></a> <a href="http://feeds.feedburner.com/~ff/earthsky?a=AEgPagAO8MI:5HWJ_-6hDto:7Q72WNTAKBA"><img src="http://feeds.feedburner.com/~ff/earthsky?d=7Q72WNTAKBA" border="0" /></a>\n</div>', 'summary_detail': {'base': u'http://feeds.feedburner.com/earthsky', 'language': None, 'type': 'text/html', 'value': u'Forests can\'t be left alone to take care of themselves, says Sally Collins of the U.S. Forest Service.<div class="feedflare">\n<a href="http://feeds.feedburner.com/~ff/earthsky?a=AEgPagAO8MI:5HWJ_-6hDto:yIl2AUoC8zA"><img src="http://feeds.feedburner.com/~ff/earthsky?d=yIl2AUoC8zA" border="0" /></a> <a href="http://feeds.feedburner.com/~ff/earthsky?a=AEgPagAO8MI:5HWJ_-6hDto:V_sGLiPBpWU"><img src="http://feeds.feedburner.com/~ff/earthsky?i=AEgPagAO8MI:5HWJ_-6hDto:V_sGLiPBpWU" border="0" /></a> <a href="http://feeds.feedburner.com/~ff/earthsky?a=AEgPagAO8MI:5HWJ_-6hDto:cGdyc7Q-1BI"><img src="http://feeds.feedburner.com/~ff/earthsky?d=cGdyc7Q-1BI" border="0" /></a> <a href="http://feeds.feedburner.com/~ff/earthsky?a=AEgPagAO8MI:5HWJ_-6hDto:dnMXMwOfBR0"><img src="http://feeds.feedburner.com/~ff/earthsky?d=dnMXMwOfBR0" border="0" /></a> <a href="http://feeds.feedburner.com/~ff/earthsky?a=AEgPagAO8MI:5HWJ_-6hDto:7Q72WNTAKBA"><img src="http://feeds.feedburner.com/~ff/earthsky?d=7Q72WNTAKBA" border="0" /></a>\n</div>'}, 'tags': [{'label': None, 'scheme': None, 'term': u'Earth'}, {'label': None, 'scheme': 'http://www.itunes.com/', 'term': u'science,podcast,water,energy,health,agriculture,biodiversity,human,world,space'}], 'title': u'Sally Collins, with an overview of U.S. forests in early 21st century', 'title_detail': {'base': u'http://feeds.feedburner.com/earthsky', 'language': None, 'type': 'text/plain', 'value': u'Sally Collins, with an overview of U.S. forests in early 21st century'}, 'updated': u'Tue, 16 Mar 2010 14:26:31 +0000', 'updated_parsed': (2010, 3, 16, 14, 26, 31, 1, 75, 0)}
 
->>> 1 + 1 == 2
-True
-"""}
-
+        feed = ProgrammingFeed.objects.get(pk="earth")
+        f = earth_sky(feed)
+        p = f(entry)
+        self.assertEqual(p, None)

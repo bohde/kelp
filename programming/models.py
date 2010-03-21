@@ -38,7 +38,8 @@ class ProgrammingFeed(models.Model):
 
         process_entry = PARSER_FUNCTIONS[self.parse_method](self)
 
-        self.new_entries = sum([ProgrammingAudio.new(**process_entry(entry)) for entry in feed.entries])
+        data = (process_entry(entry) for entry in feed.entries)
+        self.new_entries = sum([ProgrammingAudio.new(**d) for d in data if d])
         return bool(self.new_entries)
     
 class ProgrammingAudio(models.Model):
