@@ -9,7 +9,7 @@ from datetime import datetime, time, timedelta, date
 class Program(models.Model):
     name = models.CharField(max_length=64)
     url = models.CharField(max_length=512,null=True,blank=True)
-    feed = models.SlugField(default='')
+    feed = models.SlugField(default='',blank=True)
 
     def __unicode__(self):
         return str(self.name)
