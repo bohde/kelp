@@ -9,7 +9,10 @@ from models import ProgrammingAudio, ProgrammingFeed
 @login_required
 def feed(request, program, feed):
     prog = get_object_or_404(ProgrammingFeed, pk=feed)
-    prog.refresh_feed()
+    try:
+        prog.refresh_feed()
+    except:
+        pass
     ret = {"feed": prog,
            "program":program,
            "entries":prog.programmingaudio_set.all()}
