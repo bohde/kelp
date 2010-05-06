@@ -72,7 +72,7 @@ class ProgramSlot(models.Model):
     @slotify
     def next_n_hours(n):
         now = datetime.now().time()
-        now = time(now.hour)
+        now = time(now.hour - 1)
         end_hour = now.hour + n
         end = now.replace(hour=end_hour%24)
 
