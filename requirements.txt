@@ -1,2 +1,6 @@
 python-dateutil
 feedparser
+django
+south
+django-debug-toolbar
+django-nose
