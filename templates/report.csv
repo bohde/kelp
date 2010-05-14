@@ -1,2 +1,4 @@
+{% autoescape off %}
 Date;Program Name;Titles;{% for date, name, vals in entries %}
 {{ date }};{{ name }};{% for notes, times in vals %}{{ notes }}({{ times|join:', ' }}) {% endfor %}{% endfor %}
+{% endautoescape %}
