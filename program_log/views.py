@@ -136,7 +136,7 @@ def gen_report(request, year, quarter, slug):
         d = entry.date.strftime(date_format)
         name = entry.slot.program.name
         if entry.notes:
-            entries[d][name][entry.notes].append(entry.time)
+            entries[d][name][entry.notes.title()].append(entry.time)
 
     # Make a generator to put the data in tuples instead of a dict
     def lookup(date, name):
