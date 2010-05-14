@@ -4,3 +4,4 @@ django
 south
 django-debug-toolbar
 django-nose
+xlwt

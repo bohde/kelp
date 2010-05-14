@@ -4,12 +4,13 @@ from functools import wraps
 
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect, Http404, HttpResponseForbidden
+from django.http import HttpResponseRedirect, Http404, HttpResponseForbidden, HttpResponse
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 
 from models import *
 
+import xlwt
 
 try:
     from itertools import product
@@ -141,12 +142,27 @@ def gen_report(request, year, quarter, slug):
     # Make a generator to put the data in tuples instead of a dict
     def lookup(date, name):
         if entries.has_key(date) and entries[date].has_key(name):
-            ret_notes = ((note, sorted(time.strftime('%H:%M') for time in times))
-                         for note, times in entries[date][name].iteritems())
-            return (date, name, ret_notes)
+            ret_notes = ['%s (%s)' % (note, ', '.join(sorted(time.strftime('%H:%M') for time in times)))
+                         for note, times in entries[date][name].iteritems()]
+            return (date, name, ', '.join(ret_notes))
                                  
-        return (date, name, ())
+        return (date, name, '')
 
     display_entries = (lookup(a_date, name) for a_date, name in product(dates, names))
 
-    return render_to_response("report.csv", {"entries":display_entries}, mimetype='text/csv')
+    response = HttpResponse(mimetype="application/mx-excel")
+    response['Content-Disposition'] = 'attachment; filename="report.xls"'
+
+    wb = xlwt.Workbook()
+    ws = wb.add_sheet('report')
+
+    for c,val in enumerate(['Date', 'Program Name', 'Titles']):
+        ws.write(0, c, val)
+
+    for row_num, row in enumerate(display_entries):
+        for col, val in enumerate(row):
+            ws.write(row_num + 1, col, val)
+
+    wb.save(response)
+    return response
+
