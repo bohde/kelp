@@ -5,3 +5,5 @@ south
 django-debug-toolbar
 django-nose
 xlwt
+django--extensions
+BeautifulSoup

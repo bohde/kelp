@@ -88,6 +88,7 @@ INSTALLED_APPS = (
     'south',
     'debug_toolbar',
     'django_nose',
+    'django_extensions',
 )
 
 TEST_RUNNER = 'django_nose.run_tests'
