@@ -16,8 +16,7 @@ def get_members_of_listserv(html):
         
         return tuple(reversed([safe_lookup(td) for td in row.findAll('td')]))
 
-    return (find_name_email_pairs(row) for row in soup.findAll('tr') if 
-            row['class'].startswith('blockTableInnerRow'))
+    return (find_name_email_pairs(row) for row in soup.findAll('tr'))
 
 def filter_to_mst_addresses(address_tuples):
     return list(set(((str(email).partition("@")[0] , name, email) for name, email in address_tuples if str(email).endswith("@mst.edu"))))
